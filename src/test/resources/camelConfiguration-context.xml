@@ -11,6 +11,14 @@ http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<context:annotation-config />
 	<!-- <context:component-scan base-package="com.example.proxy.impl"/> -->
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>database.properties</value>
+		</property>
+	</bean>
+
 	<bean id="personProxy" class="com.example.proxy.impl.PersonProxyImpl" />
 	<!-- HikariCP configuration -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
@@ -20,11 +28,11 @@ http://camel.apache.org/schema/spring/camel-spring.xsd">
 			value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
 		<property name="dataSourceProperties">
 			<props>
-				<prop key="portNumber">3306</prop>
-				<prop key="serverName">localhost</prop>
-				<prop key="user">root</prop>
-				<prop key="databaseName">test</prop>
-				<prop key="password">root</prop>
+				<prop key="portNumber">${db.port}</prop>
+				<prop key="serverName">${db.address}</prop>
+				<prop key="user">${db.username}</prop>
+				<prop key="databaseName">${db.person.schema}</prop>
+				<prop key="password">${db.password}</prop>
 			</props>
 		</property>
 		<property name="poolName" value="springHikariCP" />
@@ -33,15 +41,11 @@ http://camel.apache.org/schema/spring/camel-spring.xsd">
 	<bean id="mainDataSource" class="com.zaxxer.hikari.HikariDataSource">
 		<constructor-arg ref="hikariConfig" />
 	</bean>
-	<!-- <bean id="mainDataSource" class="com.zaxxer.hikari.HikariDataSource"
-		destroy-method="shutdown">
-		<property name="dataSourceClassName"
-			value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-		<property name="connectionTestQuery" value="SELECT 1" />
-		<property name="dataSource.user" value="${jdbc.username}" />
-		<property name="dataSource.password" value="${jdbc.password}" />
-		<property name="dataSource.url" value="${jdbc.url}" />
-	</bean> -->
+	<!-- <bean id="mainDataSource" class="com.zaxxer.hikari.HikariDataSource" 
+		destroy-method="shutdown"> <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" 
+		/> <property name="connectionTestQuery" value="SELECT 1" /> <property name="dataSource.user" 
+		value="${jdbc.username}" /> <property name="dataSource.password" value="${jdbc.password}" 
+		/> <property name="dataSource.url" value="${jdbc.url}" /> </bean> -->
 	<!-- sqlSessionFactory for Mybatis -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="mainDataSource" />

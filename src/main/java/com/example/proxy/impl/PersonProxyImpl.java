@@ -7,7 +7,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.example.proxy.PersonProxy;
 import com.example.proxy.entity.Person;
@@ -35,7 +34,6 @@ public class PersonProxyImpl implements PersonProxy{
 		return personList;
 	}
 
-	@Override
 	public List<Person> filterPersonList(final String email) {
 
 		producerTemplate = camelContext.createProducerTemplate();
@@ -43,7 +41,7 @@ public class PersonProxyImpl implements PersonProxy{
 		final Exchange exchange = producerTemplate.request(camelContext.getEndpoint("mybatis:getPerson?statementType=SelectList"), new Processor() {
 			
 			public void process(Exchange exch) throws Exception {
-				exch.getIn().setBody(new Person(null, null, null, "someone@ymail.com"));
+				exch.getIn().setBody(new Person(null, null, null, email));
 				
 			}
 		});

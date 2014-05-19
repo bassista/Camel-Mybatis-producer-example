@@ -30,7 +30,7 @@ public class StoredProcTest {
 
 	@Test
 	public void filterPersonList() {
-		List<Person> personList = personProxy.filterPersonList("rajvaibhav.raj@gmail.com");
+		List<Person> personList = personProxy.filterPersonList("someone@abcd.com");
 		Assert.assertNotNull(personList);
 		Assert.assertFalse(personList.size() == 0);
 	}
